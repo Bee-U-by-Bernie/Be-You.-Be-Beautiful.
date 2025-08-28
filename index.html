@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bee-U by Bernie - Be You. Be Beautiful.</title>
+<meta content="Professional nail services and premium fashion jackets in Cape Town. Expert nail care, stylish men's and women's jackets. Book your appointment today!" name="description"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gold: #D4AF37;
+            --light-gold: #F4E5B8;
+            --dark-text: #2C3E50;
+            --light-bg: #F8F6F3;
+            --white: #FFFFFF;
+            --gray: #7F8C8D;
+            --light-gray: #BDC3C7;
+            --accent-rose: #E8B4B8;
+            --success-green: #27AE60;
+            --error-red: #E74C3C;
+            --shadow-light: 0 2px 10px rgba(0,0,0,0.1);
+            --shadow-medium: 0 5px 20px rgba(0,0,0,0.15);
+            --shadow-heavy: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background-color: var(--light-bg);
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--light-gold);
+            border-top: 4px solid var(--primary-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-light);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 85px;
+            height: 85px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: transform 0.3s ease;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background-color: var(--white);
+        }
+
+        .logo:hover .logo-icon {
+            transform: scale(1.05);
+        }
+
+        .logo-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            padding: 5px;
+        }
+
+        .logo:hover .logo-image {
+            transform: scale(1.1);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--dark-text);
+            transition: color 0.3s ease;
+        }
+
+        .logo:hover .logo-text {
+            color: var(--primary-gold);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-text);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .nav-links a.active {
+            color: var(--primary-gold);
+            background: rgba(212, 175, 55, 0.15);
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+            background: none;
+            border: none;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 3px;
+            background: var(--dark-text);
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        .mobile-menu.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 100px;
+        }
+
+        .page {
+            display: none;
+            min-height: calc(100vh - 160px);
+            padding: 2rem 0;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--light-bg) 0%, var(--white) 100%);
+            padding: 4rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+            50% { transform: translate(-45%, -55%) rotate(180deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--dark-text);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hero-content .tagline {
+            font-size: 1.5rem;
+            color: var(--primary-gold);
+            margin-bottom: 2rem;
+            font-style: italic;
+            font-weight: 600;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-gold), #B8941F);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--dark-text);
+            border: 2px solid var(--primary-gold);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-gold);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Services Section */
+        .services {
+            padding: 4rem 0;
+            background: var(--white);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--dark-text);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-gold), var(--light-gold));
+            border-radius: 2px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .service-card {
+            background: var(--light-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .service-card:hover::before {
+            left: 100%;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-heavy);
+            border-color: var(--primary-gold);
+        }
+
+        .service-card i {
+            font-size: 3rem;
+            color: var(--primary-gold);
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover i {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark-text);
+        }
+
+        /* Enhanced Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        /* Enhanced Image Fallback System */
+        .product-image {
+            height: 250px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--light-gold), var(--primary-gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.4s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+
+        /* Improved Fallback Icon */
+        .fallback-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.9);
+            z-index: 2;
+            transition: all 0.3s ease;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .product-card:hover .fallback-icon {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .product-info {
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .product-info h3 {
+            margin-bottom: 0.5rem;
+            color: var(--dark-text);
+            font-size: 1.3rem;
+        }
+
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-gold);
+            margin-bottom: 1rem;
+        }
+
+        .product-description {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Contact Form Improvements */
+        .contact-form {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-medium);
+            max-width: 700px;
+            margin: 2rem auto;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--light-bg);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-gold);
+            box-shadow: var(--shadow-light);
+        }
+
+        .contact-item i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .contact-item.whatsapp i {
+            color: #25D366;
+        }
+
+        .contact-item.email i {
+            color: #D44638;
+        }
+
+        .contact-item.location i,
+        .contact-item.hours i {
+            color: var(--primary-gold);
+        }
+
+        /* Footer Improvements */
+        footer {
+            background: linear-gradient(135deg, #1a2530, #2C3E50);
+            color: var(--white);
+            text-align: center;
+            padding: 3rem 0 2rem;
+            position: relative;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-gold);
+            color: var(--white);
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .social-links a:hover::before {
+            transform: translateX(100%);
+        }
+
+        .social-links a:hover {
+            background: var(--light-gold);
+            color: var(--dark-text);
+            transform: translateY(-3px) scale(1.1);
+        }
+
+        /* Enhanced WhatsApp Float */
+        .whatsapp-float {
+            position: fixed;
+            width: 65px;
+            height: 65px;
+            bottom: 25px;
+            right: 25px;
+            background: linear-gradient(135deg, #25D366, #1ebe57);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            text-decoration: none;
+            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+            animation: pulse 3s infinite;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.15);
+            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.6);
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .product-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 1rem 0;
+                box-shadow: var(--shadow-medium);
+                border-radius: 0 0 15px 15px;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu {
+                display: flex;
+            }
+
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-content .tagline {
+                font-size: 1.3rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+            
+            main {
+                margin-top: 90px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .whatsapp-float {
+                width: 55px;
+                height: 55px;
+                font-size: 28px;
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .logo-icon {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .logo-text {
+                font-size: 1.3rem;
+            }
+            
+            .nav-container {
+                padding: 0.8rem 1rem;
+            }
+        }
+
+        /* Accessibility Improvements */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus indicators for keyboard navigation */
+        .btn:focus,
+        .nav-links a:focus,
+        .mobile-menu:focus {
+            outline: 2px solid var(--primary-gold);
+            outline-offset: 2px;
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --primary-gold: #B8941F;
+                --light-gold: #D4AF37;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+<div class="loader"></div>
+</div>
+<nav id="navbar">
+<div class="nav-container">
+<div class="logo" onclick="showPage('home')">
+<div class="logo-icon">
+<img alt="Bee-U by Bernie Logo" class="logo-image" src="images/logo.png"/>
+</div>
+<div class="logo-text">Bee-U by Bernie</div>
+</div>
+<ul class="nav-links" id="navLinks">
+<li><a class="nav-link active" data-page="home" href="#">Home</a></li>
+<li><a class="nav-link" data-page="nails" href="#">Nails</a></li>
+<li><a class="nav-link" data-page="men-jackets" href="#">Men's Jackets</a></li>
+<li><a class="nav-link" data-page="women-jackets" href="#">Women's Jackets</a></li>
+<li><a class="nav-link" data-page="contact" href="#">Contact</a></li>
+</ul>
+<button class="mobile-menu" id="mobileMenu">
+<span></span>
+<span></span>
+<span></span>
+</button>
+</div>
+</nav>
+<main>
+<!-- Home Page -->
+<div class="page active" id="home">
+<section class="hero">
+<div class="container">
+<div class="hero-content">
+<h1>Welcome to Bee-U by Bernie</h1>
+<p class="tagline">Be You. Be Beautiful.</p>
+<p>Professional nail services and premium fashion jackets. Where beauty meets style in perfect harmony. Experience the difference of personalized care and curated fashion.</p>
+<div class="cta-buttons">
+<a class="btn btn-primary" data-page="nails" href="#">
+<i class="fas fa-sparkles"></i> Book Nail Service
+                            </a>
+<a class="btn btn-outline" data-page="men-jackets" href="#">
+<i class="fas fa-shopping-bag"></i> Shop Jackets
+                            </a>
+</div>
+</div>
+</div>
+</section>
+<section class="services">
+<div class="container">
+<h2 class="section-title">Our Services</h2>
+<div class="services-grid">
+<div class="service-card">
+<i class="fas fa-hand-sparkles"></i>
+<h3>Professional Nail Care</h3>
+<p>Expert nail technician services including manicures, pedicures, nail art, and gel applications. Your nails deserve the best care with premium products and attention to detail.</p>
+</div>
+<div class="service-card">
+<i class="fas fa-male"></i>
+<h3>Men's Fashion Jackets</h3>
+<p>Stylish and high-quality jackets for the modern man. From casual to formal, winter to summer - find your perfect fit and express your unique style with confidence.</p>
+</div>
+<div class="service-card">
+<i class="fas fa-female"></i>
+<h3>Women's Fashion Jackets</h3>
+<p>Elegant and trendy jackets designed for the sophisticated woman. Express your unique style with our carefully curated collection of premium fashion pieces.</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Nails Page -->
+<div class="page" id="nails">
+<div class="container">
+<h1 class="section-title">Professional Nail Services</h1>
+<div class="services-grid">
+<div class="service-card">
+<i class="fas fa-hand-sparkles"></i>
+<h3>Classic Manicure</h3>
+<p>Complete nail care with shaping, cuticle treatment, and polish application using premium products.</p>
+<div class="product-price">From R150</div>
+</div>
+<div class="service-card">
+<i class="fas fa-gem"></i>
+<h3>Gel Manicure</h3>
+<p>Long-lasting gel polish application with professional LED curing for weeks of chip-free wear.</p>
+<div class="product-price">From R200</div>
+</div>
+<div class="service-card">
+<i class="fas fa-paint-brush"></i>
+<h3>Nail Art</h3>
+<p>Custom nail art designs to express your unique style and personality. From simple to intricate designs.</p>
+<div class="product-price">From R250</div>
+</div>
+<div class="service-card">
+<i class="fas fa-square"></i>
+<h3>Acrylic Nails</h3>
+<p>Durable acrylic extensions that provide strength and length to your natural nails with a flawless finish.</p>
+<div class="product-price">From R300</div>
+</div>
+<div class="service-card">
+<i class="fas fa-thumbtack"></i>
+<h3>Rubber Base Nails</h3>
+<p>Flexible and durable rubber base gel that provides extra strength and protection for your natural nails.</p>
+<div class="product-price">From R280</div>
+</div>
+<div class="service-card">
+<i class="fas fa-layer-group"></i>
+<h3>Gel Overlay</h3>
+<p>Strengthen and protect your natural nails with a clear or colored gel overlay for a glossy, long-lasting finish.</p>
+<div class="product-price">From R220</div>
+</div>
+
+</div>
+<div class="contact-form">
+<h3 style="text-align: center; margin-bottom: 1rem;">Book Your Appointment</h3>
+<p style="text-align: center; margin-bottom: 2rem;">Contact me via WhatsApp to schedule your nail service appointment and discuss your preferences</p>
+<div style="text-align: center;">
+<a class="btn btn-primary" href="https://wa.me/27672535540?text=Hi%20Bernie,%20I%20would%20like%20to%20book%20a%20nail%20appointment">
+<i class="fab fa-whatsapp"></i> Book via WhatsApp
+                        </a>
+</div>
+</div>
+</div>
+</div>
+<!-- Men's Jackets Page -->
+<div class="page" id="men-jackets">
+<div class="container">
+<h1 class="section-title">Men's Fashion Jackets</h1>
+<div class="product-grid">
+<div class="product-card">
+<div class="product-image">
+<img alt="Winter Parka for Men" loading="lazy" src="images/jackets/men/m1.jpg"/>
+</div>
+<div class="product-info">
+<h3>Winter Parka</h3>
+<div class="product-price">R899</div>
+<p class="product-description">Warm and stylish parka designed for cold weather protection with premium insulation.</p>
+</div>
+</div>
+<div class="product-card">
+<div class="product-image">
+<img alt="Premium Leather Jacket for Men" loading="lazy" src="images/jackets/men/m2.jpg"/>
+</div>
+<div class="product-info">
+<h3>Premium Leather Jacket</h3>
+<div class="product-price">R1,299</div>
+<p class="product-description">Premium leather jacket with modern cut and exceptional quality craftsmanship.</p>
+</div>
+</div>
+<div class="product-card">
+<div class="product-image">
+<img alt="Classic Denim Jacket for Men" loading="lazy" src="images/jackets/men/m3.jpg"/>
+</div>
+<div class="product-info">
+<h3>Classic Denim Jacket</h3>
+<div class="product-price">R699</div>
+<p class="product-description">Trendy denim jacket perfect for casual wear and street style fashion.</p>
+</div>
+</div>
+<div class="product-card">
+<div class="product-image">
+<img alt="Professional Blazer for Men" loading="lazy" src="images/jackets/men/m4.jpg"/>
+</div>
+<div class="product-info">
+<h3>Professional Blazer</h3>
+<div class="product-price">R1,199</div>
+<p class="product-description">Sophisticated blazer perfect for business meetings and formal occasions.</p>
+</div>
+</div>
+<div class="product-card">
+<div class="product-image">
+<img alt="Athletic Sports Jacket for Men" loading="lazy" src="images/jackets/men/m5.jpg"/>
+</div>
+<div class="product-info">
+<h3>Athletic Sports Jacket</h3>
+<div class="product-price">R799</div>
+<p class="product-description">Athletic-inspired jacket perfect for active lifestyle and casual wear.</p>
+</div>
+</div>
+<div class="product-card">
+<div class="product-image">
+<img alt="Business Casual Jacket for Men" loading="lazy" src="images/jackets/men/m6.jpg"/>
+</div>
+<div class="product-info">
+<h3>Business Casual Jacket</h3>
+<div class="product-price">R949</div>
+<p class="product-description">Professional yet comfortable jacket ideal for the modern workplace.</p>
+</div>
+</div>
+<div class="product-card">
+<div class="product-image">
+<img alt="Quilted Winter Jacket for Men" loading="lazy" src="images/jackets/men/m7.jpg"/>
+</div>
+<div class="product-info">
+<h3>Quilted Winter Jacket</h3>
+<div class="product-price">R849</div>
+<p class="product-description">Lightweight quilted design offering comfort and warmth for cold days.</p>
+</div>
+</div>
+<div class="product-card">
+<div class="product-image">
+<img alt="Weather Resistant Windbreaker for Men" loading="lazy" src="images/jackets/men/m8.jpg"/>
+</div>
+<div class="product-info">
+<h3>Weather Resistant Windbreaker</h3>
+<div class="product-price">R599</div>
+<p class="product-description">Weather-resistant jacket ideal for outdoor activities and sports.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Women's Jackets Page -->
+<div class="page" id="women-jackets">
+<div class="container">
+<h1 class="section-title">Women's Fashion Jackets</h1>
+<div class="product-grid">
+<div class="product-card">
+<div class="product-image">
+<img alt="Elegant Professional Blazer for Women" loading="lazy" src="images/jackets/women/f1.jpg"/>
+</div>
+<div class="product-info">
+<h3>Elegant Professional Blazer</h3>
+<div class="product-price">R949</div>
+<p class="product-description">Chic and sophisticated blazer perfect for professional settings and business meetings.</p>
+</div>
+</div>
+<div class="product-card">
+<div class="product-image">
+<img alt="Stylish Biker Jacket for Women" loading="lazy" src="images/jackets/women/f2.jpg"/>
+</div>
+<div class="product-info">
+<h3>Stylish Biker Jacket</h3>
+<div class="product-price">R1,299</div>
+<p class="product-description">Edgy leather biker jacket designed for the confident, fashion-forward woman.</p>
+</div>
+</div>
+<div class="product-card">
+<div class="product-image">
+<img alt="Classic Trench Coat for Women" loading="lazy" src="images/jackets/women/f3.jpg"/>
+</div>
+<div class="product-info">
+<h3>Classic Trench Coat</h3>
+<div class="product-price">R1,399</div>
+<p class="product-description">Timeless trench coat with modern feminine silhouette and elegant styling.</p>
+</div>
+</div>
+<div class="product-card">
+<div class="product-image">
+<img alt="Soft Light Cardigan for Women" loading="lazy" src="images/jackets/women/f4.jpg"/>
+</div>
+<div class="product-info">
+<h3>Soft Light Cardigan</h3>
+<div class="product-price">R549</div>
+<p class="product-description">Soft and comfortable cardigan perfect for layering and casual style.</p>
+</div>
+</div>
+<div class="product-card">
+<div class="product-image">
+<img alt="Glamorous Evening Jacket for Women" loading="lazy" src="images/jackets/women/f5.jpg"/>
+</div>
+<div class="product-info">
+<h3>Glamorous Evening Jacket</h3>
+<div class="product-price">R1,299</div>
+<p class="product-description">Glamorous jacket perfect for special occasions, events, and evening wear.</p>
+</div>
+</div>
+<div class="product-card">
+<div class="product-image">
+<img alt="Bohemian Floral Kimono for Women" loading="lazy" src="images/jackets/women/f6.jpg"/>
+</div>
+<div class="product-info">
+<h3>Bohemian Floral Kimono</h3>
+<div class="product-price">R699</div>
+<p class="product-description">Beautiful floral kimono-style jacket for bohemian chic and casual elegance.</p>
+</div>
+</div>
+<div class="product-card">
+<div class="product-image">
+<img alt="Cozy Puffer Jacket for Women" loading="lazy" src="images/jackets/women/f7.jpg"/>
+</div>
+<div class="product-info">
+<h3>Cozy Puffer Jacket</h3>
+<div class="product-price">R899</div>
+<p class="product-description">Cozy puffer jacket with flattering fit, perfect for cold weather warmth.</p>
+</div>
+</div>
+<div class="product-card">
+<div class="product-image">
+<img alt="Sparkling Sequin Blazer for Women" loading="lazy" src="images/jackets/women/f8.jpg"/>
+</div>
+<div class="product-info">
+<h3>Sparkling Sequin Blazer</h3>
+<div class="product-price">R1,149</div>
+<p class="product-description">Sparkly sequin blazer perfect for parties, celebrations, and special nights out.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Contact Page -->
+<div class="page" id="contact">
+<div class="container">
+<h1 class="section-title">Get In Touch</h1>
+<div class="contact-form">
+<h3 style="text-align: center; margin-bottom: 2rem;">Contact Bernie</h3>
+<div class="contact-grid">
+<div class="contact-item whatsapp">
+<i class="fab fa-whatsapp"></i>
+<h4>WhatsApp</h4>
+<p>For quick bookings and inquiries</p>
+<a class="btn btn-primary" href="https://wa.me/27672535540" style="margin-top: 1rem;">
+<i class="fab fa-whatsapp"></i> Message Now
+                            </a>
+</div>
+<div class="contact-item email">
+<i class="fas fa-envelope"></i>
+<h4>Email</h4>
+<p>For detailed inquiries</p>
+<a class="btn btn-outline" href="mailto:bernie@bee-u.com" style="margin-top: 1rem;">
+<i class="fas fa-envelope"></i> Email Now
+                            </a>
+</div>
+<div class="contact-item location">
+<i class="fas fa-map-marker-alt"></i>
+<h4>Location</h4>
+<p>Cape Town, Western Cape<br/>South Africa</p>
+</div>
+<div class="contact-item hours">
+<i class="fas fa-clock"></i>
+<h4>Operating Hours</h4>
+<p>Mon - Sat: 9:00 AM - 6:00 PM<br/>Sun: By Appointment Only</p>
+</div>
+</div>
+<div style="text-align: center; margin-top: 3rem;">
+<h4 style="margin-bottom: 1rem;">Ready to book or have questions?</h4>
+<p style="margin-bottom: 2rem;">Contact me directly via WhatsApp or email for the fastest response. I'm here to help with nail appointments, jacket inquiries, or any questions about my services.</p>
+<div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+<a class="btn btn-primary" href="https://wa.me/27672535540?text=Hi%20Bernie,%20I%20have%20a%20question%20about%20your%20services" style="font-size: 1.1rem;">
+<i class="fab fa-whatsapp"></i> WhatsApp
+                            </a>
+<a class="btn btn-outline" href="mailto:bernie@bee-u.com" style="font-size: 1.1rem;">
+<i class="fas fa-envelope"></i> Email
+                            </a>
+</div>
+</div>
+</div>
+<div style="margin-top: 3rem; text-align: center;">
+<h3 style="margin-bottom: 2rem;">Follow My Work</h3>
+<p>Stay updated with my latest nail art creations and new jacket arrivals on social media!</p>
+</div>
+</div>
+</div>
+</main>
+<footer>
+<div class="footer-content">
+<div class="logo" style="justify-content: center; margin-bottom: 2rem;">
+<div class="logo-icon" style="width: 120px; height: 120px; background-color: rgba(255,255,255,0.9); padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+<img alt="Bee-U by Bernie Logo" class="logo-image" src="images/logo.png"/>
+</div>
+<div class="logo-text" style="color: var(--white); font-size: 2.2rem; margin-top: 15px;">Bee-U by Bernie</div>
+</div>
+<p style="margin-bottom: 1rem;">"Be You. Be Beautiful."</p>
+<p style="margin-bottom: 2rem;">Professional nail services and premium fashion jackets in Cape Town, Western Cape.</p>
+<div class="social-links">
+<a href="https://www.instagram.com/example" target="_blank" title="Follow on Instagram">
+<i class="fab fa-instagram"></i>
+</a>
+<a href="https://www.facebook.com/example" target="_blank" title="Like on Facebook">
+<i class="fab fa-facebook-f"></i>
+</a>
+<a href="https://wa.me/27672535540" target="_blank" title="WhatsApp">
+<i class="fab fa-whatsapp"></i>
+</a>
+<a href="mailto:bernie@bee-u.com" target="_blank" title="Email">
+<i class="fas fa-envelope"></i>
+</a>
+</div>
+<div style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 1rem; margin-top: 2rem;">
+<p>© 2025 Bee-U by Bernie. All rights reserved.</p>
+<p style="margin-top: 0.5rem; font-size: 0.9rem;">Crafted with ❤️ for beauty and fashion</p>
+</div>
+</div>
+</footer>
+<!-- WhatsApp Floating Button -->
+<a class="whatsapp-float" href="https://wa.me/27672535540?text=Hi%20Bernie,%20I%20found%20your%20website%20and%20I'm%20interested%20in%20your%20services" target="_blank" title="Contact via WhatsApp">
+<i class="fab fa-whatsapp"></i>
+</a>
+<script>
+        // Simplified Navigation System
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading screen
+            setTimeout(function() {
+                const loadingScreen = document.getElementById('loadingScreen');
+                if (loadingScreen) {
+                    loadingScreen.classList.add('fade-out');
+                    setTimeout(function() {
+                        loadingScreen.style.display = 'none';
+                    }, 500);
+                }
+            }, 1000);
+            
+            // Mobile menu functionality
+            const mobileMenu = document.getElementById('mobileMenu');
+            const navLinks = document.getElementById('navLinks');
+            
+            if (mobileMenu && navLinks) {
+                mobileMenu.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                    mobileMenu.classList.toggle('active');
+                });
+            }
+            
+            // Navigation links functionality
+            const navLinksList = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page');
+            
+            function showPage(pageId) {
+                // Hide all pages
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // Remove active class from all links
+                navLinksList.forEach(link => {
+                    link.classList.remove('active');
+                });
+                
+                // Show selected page
+                const targetPage = document.getElementById(pageId);
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                }
+                
+                // Add active class to clicked link
+                const targetLink = document.querySelector(`[data-page="${pageId}"]`);
+                if (targetLink) {
+                    targetLink.classList.add('active');
+                }
+                
+                // Close mobile menu if open
+                if (navLinks && navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    if (mobileMenu) {
+                        mobileMenu.classList.remove('active');
+                    }
+                }
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            // Add click event to navigation links
+            navLinksList.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+                    showPage(pageId);
+                });
+            });
+            
+            // Add click event to CTA buttons
+            const ctaButtons = document.querySelectorAll('[data-page]');
+            ctaButtons.forEach(button => {
+                if (!button.classList.contains('nav-link')) {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const pageId = this.getAttribute('data-page');
+                        showPage(pageId);
+                    });
+                }
+            });
+            
+            // Navbar scroll effect
+            const navbar = document.getElementById('navbar');
+            if (navbar) {
+                window.addEventListener('scroll', function() {
+                    if (window.scrollY > 50) {
+                        navbar.classList.add('scrolled');
+                    } else {
+                        navbar.classList.remove('scrolled');
+                    }
+                });
+            }
+            
+            // Initialize animations for service cards
+            const serviceCards = document.querySelectorAll('.service-card');
+            serviceCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 + (index * 100));
+            });
+            
+            // Initialize animations for product cards
+            const productCards = document.querySelectorAll('.product-card');
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            // Check if IntersectionObserver is available
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                }, observerOptions);
+                
+                productCards.forEach(card => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(30px)';
+                    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    observer.observe(card);
+                });
+            } else {
+                // Fallback for browsers that don't support IntersectionObserver
+                productCards.forEach((card, index) => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(30px)';
+                    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100 + (index * 100));
+                });
+            }
+        });
+
+        // Global function for logo click
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            // Hide all pages
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Remove active class from all links
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected page
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            // Add active class to corresponding link
+            const targetLink = document.querySelector(`[data-page="${pageId}"]`);
+            if (targetLink) {
+                targetLink.classList.add('active');
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
